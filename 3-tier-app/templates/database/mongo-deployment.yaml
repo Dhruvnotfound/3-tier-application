@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: mongodb
+spec:
+  serviceName: mongodb
+  replicas: {{ .Values.mongodb.replicaCount }}
+  selector:
+    matchLabels:
+      app: mongodb #match the labels from template
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: {{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}
+        # these commands configure and start the mongod process with specific settings for memory allocation, cache size, and network binding, 
+        # ensuring optimal performance and accessibility for MongoDB 
+        command:
+          - "numactl"
+          - "--interleave=all"
+          - "mongod"
+          - "--wiredTigerCacheSizeGB"
+          - "0.1"
+          - "--bind_ip"
+          - "0.0.0.0"
+        ports:
+        - containerPort: {{ .Values.mongodb.containerPort }}
+        env: 
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-cred
+                key: username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-cred
+                key: password
+        volumeMounts:
+        - name: mongodb-storage
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-storage
+    spec:
+      accessModes: {{ .Values.mongodb.storage.accessModes }}
+      resources:
+        requests:
+          storage: {{ .Values.mongodb.storage.size }}  # Adjust storage size as needed

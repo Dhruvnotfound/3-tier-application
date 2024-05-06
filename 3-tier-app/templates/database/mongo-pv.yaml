@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+  namespace: 3-tier
+spec:
+  capacity: 
+    storage: {{ .Values.persistentVolume.capacity }}
+  volumeMode: {{ .Values.persistentVolume.volumeMode}}
+  accessModes:
+    {{ .Values.persistentVolume.accessModes }}
+  hostPath:
+    path: /data/db

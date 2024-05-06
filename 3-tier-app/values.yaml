@@ -1,0 +1,27 @@
+# Namespace
+namespace: 3-tier
+
+##DATABASE
+# MongoDB StatefulSet
+mongodb:
+  replicaCount: 1
+  image:
+    repository: mongo
+    tag: 4.4.6
+  containerPort: 27017
+  storage:
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+
+# MongoDB Service
+service:
+  type: ClusterIP
+  port: 27017
+
+# PersistentVolume
+persistentVolume:
+  capacity: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
