@@ -20,13 +20,9 @@ spec:
         # these commands configure and start the mongod process with specific settings for memory allocation, cache size, and network binding, 
         # ensuring optimal performance and accessibility for MongoDB 
         command:
-          - "numactl"
-          - "--interleave=all"
-          - "mongod"
-          - "--wiredTigerCacheSizeGB"
-          - "0.1"
-          - "--bind_ip"
-          - "0.0.0.0"
+          {{- range $command := .Values.mongodb.command }}
+          - {{ $command}}
+          {{- end }}
         ports:
         - containerPort: {{ .Values.mongodb.containerPort }}
         env: 
