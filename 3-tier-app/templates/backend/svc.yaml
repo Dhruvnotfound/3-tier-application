@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: backend-service
+  namespace: 3-tier
+spec:
+  selector:
+    app: backend
+  type: {{ .Values.backendSVC.type }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.backendSVC.port }}
+    targetPort: {{ .Values.backendSVC.targetport }}

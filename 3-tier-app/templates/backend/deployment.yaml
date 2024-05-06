@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: {{ .Values.namespace}}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.backend.containerPort }}
+        env:
+          - name: MONGO_CONN_STR  # Example environment variable for MongoDB connection URI
+            value: mongodb://mongodb-svc:27017/todo?directConnection=true
+          - name: MONGO_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-cred
+                key: username
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-cred
+                key: password
+        livenessProbe: 
+          httpGet:
+            path: {{ .Values.backend.liveness.path }}
+            port: {{ .Values.backend.liveness.port }}
+          initialDelaySeconds: {{ .Values.backend.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.liveness.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.backend.readiness.path }}
+            port: {{ .Values.backend.readiness.port }}
+          initialDelaySeconds: {{ .Values.backend.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.readiness.periodSeconds }}
+          successThreshold: {{ .Values.backend.readiness.successThreshold }}

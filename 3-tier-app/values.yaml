@@ -1,7 +1,6 @@
 # Namespace
 namespace: 3-tier
 
-##DATABASE
 # MongoDB StatefulSet
 mongodb:
   replicaCount: 1
@@ -9,6 +8,14 @@ mongodb:
     repository: mongo
     tag: 4.4.6
   containerPort: 27017
+  command:
+    - "numactl"
+    - "--interleave=all"
+    - "mongod"
+    - "--wiredTigerCacheSizeGB"
+    - "0.1"
+    - "--bind_ip"
+    - "0.0.0.0"
   storage:
     size: 1Gi
     accessModes:
@@ -18,6 +25,31 @@ mongodb:
 service:
   type: ClusterIP
   port: 27017
+  targetport: 27017
+
+#Backend deployment 
+backend:
+  replicaCount: 2
+  image:
+    repository: dhruvnotfound/3-tier-backend
+    tag: 0.0.1
+  containerPort: 3000
+  liveness:
+    path: /ok
+    port: 3000
+    initialDelaySeconds: 2
+    periodSeconds: 5
+  readiness:
+    path: /ok
+    port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+
+backendSVC:
+  type: ClusterIP
+  port: 80
+  targetport: 3000
 
 # PersistentVolume
 persistentVolume:
