@@ -29,7 +29,7 @@ service:
 
 #Backend deployment 
 backend:
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: dhruvnotfound/3-tier-backend
     tag: 0.0.1
@@ -51,9 +51,34 @@ backendSVC:
   port: 80
   targetport: 3000
 
+#Frontend deployment 
+frontend:
+  replicaCount: 1
+  strategy:
+    type: RollingUpdate
+    maxSurge: 1
+    maxUnavailable: 25%
+  image:
+    repository: dhruvnotfound/3-tier-frontend
+    tag: 0.0.1
+  containerPort: 80
+
+frontendSVC:
+  port: 80
+  type: ClusterIP
 # PersistentVolume
 persistentVolume:
   capacity: 1Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
+
+#Ingress
+ingress:
+  rules:
+    - path: /frontend
+      serviceName: frontend-service
+      servicePort: 80
+    - path: /backend
+      serviceName: backend-service
+      servicePort: 80

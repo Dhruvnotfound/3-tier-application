@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: frontend-service
+namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - port: {{ .Values.frontendSVC.port }}
+    protocol: TCP
+  type: {{ .Values.frontendSVC.type }}
+  selector:
+    role: frontend

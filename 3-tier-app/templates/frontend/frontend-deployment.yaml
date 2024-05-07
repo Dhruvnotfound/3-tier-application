@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  strategy:
+    type: {{ .Values.frontend.strategy.type }}
+    rollingUpdate:
+      maxSurge: {{ .Values.frontend.strategy.maxSurge }}
+      maxUnavailable: {{ .Values.frontend.strategy.maxUnavailable }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontendImage
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.frontend.containerPort }}
+        env:
+          - name: REACT_APP_BACKEND_URL
+            value: "http://backend-service:80"
