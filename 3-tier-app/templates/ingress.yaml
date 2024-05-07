@@ -10,11 +10,11 @@ spec:
     http:
       paths:
       {{- range $rules := .Values.ingress.rules }}
-      -path: {{ $rules.path }}
-      pathtype: prefix
-      backend:
-        service:
-          name: {{ $rules.serviceName }}
-          port:
-            number: {{ $rules.servicePort }}
+      - path: {{ $rules.path }}
+        pathtype: prefix
+        backend:
+          service:
+            name: {{ $rules.serviceName }}
+            port:
+              number: {{ $rules.servicePort }}
       {{- end}}

@@ -21,7 +21,7 @@ spec:
         # ensuring optimal performance and accessibility for MongoDB 
         command:
           {{- range $command := .Values.mongodb.command }}
-          - {{ $command}}
+          - {{ $command | quote }}
           {{- end }}
         ports:
         - containerPort: {{ .Values.mongodb.containerPort }}
