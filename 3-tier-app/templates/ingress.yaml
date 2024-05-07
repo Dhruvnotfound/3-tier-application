@@ -7,14 +7,14 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    http:
-      paths:
-      {{- range $rules := .Values.ingress.rules }}
-        - path: {{ $rules.path }}
-          pathtype: Prefix
-          backend:
-            service:
-              name: {{ $rules.serviceName }}
-              port:
-                number: {{ $rules.servicePort }}
-      {{- end}}
+    {{- range $rules := .Values.ingress.rules }}
+    - http:
+        paths:
+          - path: {{ $rules.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $rules.serviceName }}
+                port:
+                  number: {{ $rules.servicePort }}
+    {{- end }}
