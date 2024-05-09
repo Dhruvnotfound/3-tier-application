@@ -33,15 +33,15 @@ backend:
   image:
     repository: dhruvnotfound/3-tier-backend
     tag: 0.0.1
-  containerPort: 3000
+  containerPort: 3500
   liveness:
     path: /ok
-    port: 3000
+    port: 3500
     initialDelaySeconds: 2
     periodSeconds: 5
   readiness:
     path: /ok
-    port: 3000
+    port: 3500
     initialDelaySeconds: 5
     periodSeconds: 5
     successThreshold: 1
@@ -49,7 +49,7 @@ backend:
 backendSVC:
   type: ClusterIP
   port: 80
-  targetport: 3000
+  targetport: 3500
 
 #Frontend deployment 
 frontend:

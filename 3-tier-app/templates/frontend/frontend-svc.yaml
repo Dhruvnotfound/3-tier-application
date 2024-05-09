@@ -9,4 +9,4 @@ spec:
     protocol: TCP
   type: {{ .Values.frontendSVC.type }}
   selector:
-    role: frontend
+    app: frontend
