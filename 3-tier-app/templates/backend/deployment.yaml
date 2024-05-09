@@ -21,7 +21,7 @@ spec:
         - containerPort: {{ .Values.backend.containerPort }}
         env:
           - name: MONGO_CONN_STR  # Example environment variable for MongoDB connection URI
-            value: mongodb://mongodb-svc:27017/todo?directConnection=true
+            value: mongodb://mongo-svc:27017/todo?directConnection=true
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:
