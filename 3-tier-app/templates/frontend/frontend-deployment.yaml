@@ -26,4 +26,4 @@ spec:
         - containerPort: {{ .Values.frontend.containerPort }}
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://backend-service:80"
+            value: "http://api.three-tier.svc.cluster.local/api/tasks"  #"http://localhost:8080/api/tasks"
