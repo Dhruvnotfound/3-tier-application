@@ -9,9 +9,7 @@ mongodb:
     tag: 4.4.6
   containerPort: 27017
   command:
-    - "numactl"
-    - "--interleave=all"
-    - "mongod"
+    - "/usr/bin/mongod"
     - "--wiredTigerCacheSizeGB"
     - "0.1"
     - "--bind_ip"
